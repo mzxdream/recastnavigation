@@ -1462,3 +1462,26 @@ bool rcMergePolyMeshDetails(rcContext* ctx, rcPolyMeshDetail** meshes, const int
 	
 	return true;
 }
+
+void rcFilterForceUnwalkableArea(rcContext* ctx, rcHeightfield& solid)
+{
+	rcAssert(ctx);
+	///@TODO:
+	//	ctx->startTimer(RC_TIMER_FILTER_LOW_OBSTACLES);
+	const int w = solid.width;
+	const int h = solid.height;
+	
+	for (int y = 0; y < h; ++y)
+	{
+		for (int x = 0; x < w; ++x)
+		{
+			rcSpan* ps = 0;
+			for (rcSpan* s = solid.spans[x + y*w]; s; ps = s, s = s->next)
+			{
+				if (s->area == RC_FORCE_UNWALKABLE_AREA)
+					s->area = RC_NULL_AREA;
+			}
+		}
+	}
+	//	ctx->stopTimer(RC_TIMER_FILTER_LOW_OBSTACLES);
+}

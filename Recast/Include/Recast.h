@@ -275,10 +275,10 @@ static const int RC_SPANS_PER_POOL = 2048;
 /// @see rcHeightfield
 struct rcSpan
 {
-	unsigned int smin : RC_SPAN_HEIGHT_BITS; ///< The lower limit of the span. [Limit: < #smax]
-	unsigned int smax : RC_SPAN_HEIGHT_BITS; ///< The upper limit of the span. [Limit: <= #RC_SPAN_MAX_HEIGHT]
-	unsigned int area : 6;                   ///< The area id assigned to the span.
-	rcSpan* next;                            ///< The next span higher up in column.
+	unsigned short smin; ///< The lower limit of the span. [Limit: < #smax]
+	unsigned short smax; ///< The upper limit of the span. [Limit: <= #RC_SPAN_MAX_HEIGHT]
+	unsigned char area;  ///< The area id assigned to the span.
+	rcSpan* next;        ///< The next span higher up in column.
 };
 
 /// A memory pool used for quick allocation of spans within a heightfield.
@@ -587,6 +587,7 @@ static const unsigned char RC_NULL_AREA = 0;
 /// This is also the maximum allowed area id, and the only non-null area id 
 /// recognized by some steps in the build process. 
 static const unsigned char RC_WALKABLE_AREA = 63;
+static const unsigned char RC_FORCE_UNWALKABLE_AREA = 0xff;
 
 /// The value returned by #rcGetCon if the specified direction is not connected
 /// to another span. (Has no neighbor.)
@@ -1196,6 +1197,8 @@ bool rcCopyPolyMesh(rcContext* ctx, const rcPolyMesh& src, rcPolyMesh& dst);
 ///  @param[out]	mesh	The resulting detail mesh. (Must be pre-allocated.)
 ///  @returns True if the operation completed successfully.
 bool rcMergePolyMeshDetails(rcContext* ctx, rcPolyMeshDetail** meshes, const int nmeshes, rcPolyMeshDetail& mesh);
+
+void rcFilterForceUnwalkableArea(rcContext* ctx, rcHeightfield& solid);
 
 /// @}
 
