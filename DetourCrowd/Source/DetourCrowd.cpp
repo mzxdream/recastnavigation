@@ -1196,9 +1196,9 @@ void dtCrowd::update(const float dt, dtCrowdAgentDebugInfo* debug)
 		else
 		{
 			// Calculate steering direction.
-			if (ag->params.updateFlags & DT_CROWD_ANTICIPATE_TURNS)
-				calcSmoothSteerDirection(ag, dvel);
-			else
+			//if (ag->params.updateFlags & DT_CROWD_ANTICIPATE_TURNS)
+			//	calcSmoothSteerDirection(ag, dvel);
+			//else
 				calcStraightSteerDirection(ag, dvel);
 			
 			// Calculate speed scale, which tells the agent to slowdown at the end of the path.
