@@ -76,3 +76,62 @@ void scanDirectory(const string& path, const string& ext, vector<string>& fileli
 	filelist.clear();
 	scanDirectoryAppend(path, ext, filelist);
 }
+
+void scanDirectoryAppendRecursive(const string& path, const string& ext, vector<string>& filelist)
+{
+#ifdef WIN32
+	string pathWithExt = path + "/*";
+
+	_finddata_t dir;
+	intptr_t fh = _findfirst(pathWithExt.c_str(), &dir);
+	if (fh == -1L)
+	{
+		return;
+	}
+	do
+	{
+		if (strcmp(dir.name, ".") == 0 || strcmp(dir.name, "..") == 0)
+		{
+			continue;
+		}
+		string fullPath = path + "/" + dir.name;
+		if (dir.attrib & _A_SUBDIR)
+		{
+			scanDirectoryAppendRecursive(fullPath, ext, filelist);
+		}
+		else
+		{
+			auto length = strlen(dir.name);
+			if (length < ext.size())
+			{
+				continue;
+			}
+			if (strcmp(dir.name + length - ext.size(), ext.c_str()) != 0)
+			{
+				continue;
+			}
+			filelist.push_back(dir.name);
+			filelist.push_back(fullPath);
+		}
+	} while (_findnext(fh, &dir) == 0);
+	_findclose(fh);
+#else
+	dirent* current = 0;
+	DIR* dp = opendir(path.c_str());
+	if (!dp)
+	{
+		return;
+	}
+
+	size_t extLen = strlen(ext.c_str());
+	while ((current = readdir(dp)) != 0)
+	{
+		size_t len = strlen(current->d_name);
+		if (len > extLen && strncmp(current->d_name + len - extLen, ext.c_str(), extLen) == 0)
+		{
+			filelist.push_back(current->d_name);
+		}
+	}
+	closedir(dp);
+#endif
+}

@@ -24,5 +24,6 @@
 
 void scanDirectoryAppend(const std::string& path, const std::string& ext, std::vector<std::string>& fileList);
 void scanDirectory(const std::string& path, const std::string& ext, std::vector<std::string>& fileList);
+void scanDirectoryAppendRecursive(const std::string& path, const std::string& ext, std::vector<std::string>& fileList);
 
 #endif // FILELIST_H

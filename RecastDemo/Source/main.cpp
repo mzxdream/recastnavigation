@@ -168,7 +168,9 @@ int main(int /*argc*/, char** /*argv*/)
 	string sampleName = "Choose Sample...";
 	
 	vector<string> files;
-	const string meshesFolder = "Meshes";
+
+	vector<string> meshesFiles;
+	const vector<string> meshesFolders = { "Meshes", };
 	string meshName = "Choose Mesh...";
 	
 	float markerPosition[3] = {0, 0, 0};
@@ -237,7 +239,7 @@ int main(int /*argc*/, char** /*argv*/)
 					{
 						if (sample && geom)
 						{
-							string savePath = meshesFolder + "/";
+							string savePath = meshesFolders[0] + "/";
 							BuildSettings settings;
 							memset(&settings, 0, sizeof(settings));
 
@@ -558,8 +560,12 @@ int main(int /*argc*/, char** /*argv*/)
 					showSample = false;
 					showTestCases = false;
 					showLevels = true;
-					scanDirectory(meshesFolder, ".obj", files);
-					scanDirectoryAppend(meshesFolder, ".gset", files);
+					meshesFiles.clear();
+					for (const auto& meshesFolder : meshesFolders)
+					{
+						scanDirectoryAppendRecursive(meshesFolder, ".obj", meshesFiles);
+						scanDirectoryAppendRecursive(meshesFolder, ".gset", meshesFiles);
+					}
 				}
 			}
 			if (geom)
@@ -670,26 +676,24 @@ int main(int /*argc*/, char** /*argv*/)
 			if (imguiBeginScrollArea("Choose Level", width - 10 - 250 - 10 - 200, height - 10 - 450, 200, 450, &levelScroll))
 				mouseOverMenu = true;
 			
-			vector<string>::const_iterator fileIter = files.begin();
-			vector<string>::const_iterator filesEnd = files.end();
-			vector<string>::const_iterator levelToLoad = filesEnd;
-			for (; fileIter != filesEnd; ++fileIter)
+			int levelToLoad = -1;
+			for (int i = 1; i < (int)meshesFiles.size(); i += 2)
 			{
-				if (imguiItem(fileIter->c_str()))
+				if (imguiItem(meshesFiles[i - 1].c_str()))
 				{
-					levelToLoad = fileIter;
+					levelToLoad = i;
 				}
 			}
-			
-			if (levelToLoad != filesEnd)
+	
+			if (levelToLoad != -1)
 			{
-				meshName = *levelToLoad;
+				meshName = meshesFiles[levelToLoad - 1];
 				showLevels = false;
 				
 				delete geom;
 				geom = 0;
 				
-				string path = meshesFolder + "/" + meshName;
+				string path = meshesFiles[levelToLoad];
 				
 				geom = new InputGeom;
 				if (!geom->load(&ctx, path))
@@ -800,7 +804,7 @@ int main(int /*argc*/, char** /*argv*/)
 					meshName = test->getGeomFileName();
 					
 					
-					path = meshesFolder + "/" + meshName;
+					path = meshesFolders[0] + "/" + meshName;
 					
 					delete geom;
 					geom = new InputGeom;

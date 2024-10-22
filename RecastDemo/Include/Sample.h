@@ -138,7 +138,7 @@ protected:
 public:
 	Sample();
 	virtual ~Sample();
-	
+	bool isReverse() const { return true; }
 	void setContext(BuildContext* ctx) { m_ctx = ctx; }
 	
 	void setTool(SampleTool* tool);
