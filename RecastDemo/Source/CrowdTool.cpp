@@ -212,7 +212,7 @@ void CrowdToolState::handleRender()
 	{
 		const dtNavMeshQuery* navquery = crowd->getPathQueue()->getNavQuery();
 		if (navquery)
-			duDebugDrawNavMeshNodes(&dd, *navquery);
+			duDebugDrawNavMeshNodes(&dd, *navquery, m_sample->IsReverseShow());
 	}
 
 	dd.depthMask(false);
@@ -230,7 +230,7 @@ void CrowdToolState::handleRender()
 			const dtPolyRef* path = ag->corridor.getPath();
 			const int npath = ag->corridor.getPathCount();			
 			for (int j = 0; j < npath; ++j)
-				duDebugDrawNavMeshPoly(&dd, *nav, path[j], duRGBA(255,255,255,24));
+				duDebugDrawNavMeshPoly(&dd, *nav, path[j], duRGBA(255,255,255,24), m_sample->IsReverseShow());
 		}
 	}
 	

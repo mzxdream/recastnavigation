@@ -1019,8 +1019,8 @@ void NavMeshTesterTool::handleRender()
 
 	if (m_toolMode == TOOLMODE_PATHFIND_FOLLOW)
 	{
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol);
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_endRef, endCol);
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol, m_sample->IsReverseShow());
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_endRef, endCol, m_sample->IsReverseShow());
 		
 		if (m_npolys)
 		{
@@ -1028,7 +1028,7 @@ void NavMeshTesterTool::handleRender()
 			{
 				if (m_polys[i] == m_startRef || m_polys[i] == m_endRef)
 					continue;
-				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			}
 		}
 				
@@ -1045,7 +1045,7 @@ void NavMeshTesterTool::handleRender()
 		
 		if (m_pathIterNum)
 		{
-			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_pathIterPolys[0], duRGBA(255,255,255,128));
+			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_pathIterPolys[0], duRGBA(255,255,255,128), m_sample->IsReverseShow());
 
 			dd.depthMask(false);
 			dd.begin(DU_DRAW_LINES, 1.0f);
@@ -1079,8 +1079,8 @@ void NavMeshTesterTool::handleRender()
 	else if (m_toolMode == TOOLMODE_PATHFIND_STRAIGHT ||
 			 m_toolMode == TOOLMODE_PATHFIND_SLICED)
 	{
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol);
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_endRef, endCol);
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol, m_sample->IsReverseShow());
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_endRef, endCol, m_sample->IsReverseShow());
 		
 		if (m_npolys)
 		{
@@ -1088,7 +1088,7 @@ void NavMeshTesterTool::handleRender()
 			{
 				if (m_polys[i] == m_startRef || m_polys[i] == m_endRef)
 					continue;
-				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			}
 		}
 		
@@ -1130,12 +1130,12 @@ void NavMeshTesterTool::handleRender()
 	}
 	else if (m_toolMode == TOOLMODE_RAYCAST)
 	{
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol);
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol, m_sample->IsReverseShow());
 		
 		if (m_nstraightPath)
 		{
 			for (int i = 1; i < m_npolys; ++i)
-				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+				duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			
 			dd.depthMask(false);
 			const unsigned int spathCol = m_hitResult ? duRGBA(64,16,0,220) : duRGBA(240,240,240,220);
@@ -1166,7 +1166,7 @@ void NavMeshTesterTool::handleRender()
 	}
 	else if (m_toolMode == TOOLMODE_DISTANCE_TO_WALL)
 	{
-		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol);
+		duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_startRef, startCol, m_sample->IsReverseShow());
 		dd.depthMask(false);
 		duDebugDrawCircle(&dd, m_spos[0], m_spos[1]+agentHeight/2, m_spos[2], m_distanceToWall, duRGBA(64,16,0,220), 2.0f);
 		dd.begin(DU_DRAW_LINES, 3.0f);
@@ -1179,7 +1179,7 @@ void NavMeshTesterTool::handleRender()
 	{
 		for (int i = 0; i < m_npolys; ++i)
 		{
-			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			dd.depthMask(false);
 			if (m_parent[i])
 			{
@@ -1207,7 +1207,7 @@ void NavMeshTesterTool::handleRender()
 	{
 		for (int i = 0; i < m_npolys; ++i)
 		{
-			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			dd.depthMask(false);
 			if (m_parent[i])
 			{
@@ -1241,7 +1241,7 @@ void NavMeshTesterTool::handleRender()
 	{
 		for (int i = 0; i < m_npolys; ++i)
 		{
-			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol);
+			duDebugDrawNavMeshPoly(&dd, *m_navMesh, m_polys[i], pathCol, m_sample->IsReverseShow());
 			dd.depthMask(false);
 			if (m_parent[i])
 			{

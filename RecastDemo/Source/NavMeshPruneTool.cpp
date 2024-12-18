@@ -302,7 +302,7 @@ void NavMeshPruneTool::handleRender()
 				const dtPolyRef ref = base | (unsigned int)j;
 				if (m_flags->getFlags(ref))
 				{
-					duDebugDrawNavMeshPoly(&dd, *nav, ref, duRGBA(255,255,255,128));
+					duDebugDrawNavMeshPoly(&dd, *nav, ref, duRGBA(255,255,255,128), m_sample->IsReverseShow());
 				}
 			}
 		}

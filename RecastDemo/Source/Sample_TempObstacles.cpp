@@ -510,7 +510,7 @@ enum DrawDetailType
 	DRAWDETAIL_MESH
 };
 
-void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, int type)
+void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, int type, bool isReverseShow)
 {
 	struct TileCacheBuildContext
 	{
@@ -554,7 +554,7 @@ void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, in
 			return;
 		if (type == DRAWDETAIL_AREAS)
 		{
-			duDebugDrawTileCacheLayerAreas(dd, *bc.layer, params->cs, params->ch);
+			duDebugDrawTileCacheLayerAreas(dd, *bc.layer, params->cs, params->ch, isReverseShow);
 			continue;
 		}
 
@@ -564,7 +564,7 @@ void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, in
 			return;
 		if (type == DRAWDETAIL_REGIONS)
 		{
-			duDebugDrawTileCacheLayerRegions(dd, *bc.layer, params->cs, params->ch);
+			duDebugDrawTileCacheLayerRegions(dd, *bc.layer, params->cs, params->ch, isReverseShow);
 			continue;
 		}
 		
@@ -577,7 +577,7 @@ void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, in
 			return;
 		if (type == DRAWDETAIL_CONTOURS)
 		{
-			duDebugDrawTileCacheContours(dd, *bc.lcset, tile->header->bmin, params->cs, params->ch);
+			duDebugDrawTileCacheContours(dd, *bc.lcset, tile->header->bmin, params->cs, params->ch, isReverseShow);
 			continue;
 		}
 		
@@ -590,7 +590,7 @@ void drawDetail(duDebugDraw* dd, dtTileCache* tc, const int tx, const int ty, in
 
 		if (type == DRAWDETAIL_MESH)
 		{
-			duDebugDrawTileCachePolyMesh(dd, *bc.lmesh, tile->header->bmin, params->cs, params->ch);
+			duDebugDrawTileCachePolyMesh(dd, *bc.lmesh, tile->header->bmin, params->cs, params->ch, isReverseShow);
 			continue;
 		}
 
@@ -1090,12 +1090,12 @@ void Sample_TempObstacles::handleRender()
 		if (m_drawMode != DRAWMODE_NAVMESH_INVIS)
 			duDebugDrawNavMeshWithClosedList(&m_dd, *m_navMesh, *m_navQuery, m_navMeshDrawFlags/*|DU_DRAWNAVMESH_COLOR_TILES*/, m_isReverseShow);
 		if (m_drawMode == DRAWMODE_NAVMESH_BVTREE)
-			duDebugDrawNavMeshBVTree(&m_dd, *m_navMesh);
+			duDebugDrawNavMeshBVTree(&m_dd, *m_navMesh, m_isReverseShow);
 		if (m_drawMode == DRAWMODE_NAVMESH_PORTALS)
-			duDebugDrawNavMeshPortals(&m_dd, *m_navMesh);
+			duDebugDrawNavMeshPortals(&m_dd, *m_navMesh, m_isReverseShow);
 		if (m_drawMode == DRAWMODE_NAVMESH_NODES)
-			duDebugDrawNavMeshNodes(&m_dd, *m_navQuery);
-		duDebugDrawNavMeshPolysWithFlags(&m_dd, *m_navMesh, SAMPLE_POLYFLAGS_DISABLED, duRGBA(0,0,0,128));
+			duDebugDrawNavMeshNodes(&m_dd, *m_navQuery, m_isReverseShow);
+		duDebugDrawNavMeshPolysWithFlags(&m_dd, *m_navMesh, SAMPLE_POLYFLAGS_DISABLED, duRGBA(0,0,0,128), m_isReverseShow);
 	}
 	
 	
@@ -1113,7 +1113,7 @@ void Sample_TempObstacles::handleRender()
 void Sample_TempObstacles::renderCachedTile(const int tx, const int ty, const int type)
 {
 	if (m_tileCache)
-		drawDetail(&m_dd,m_tileCache,tx,ty,type);
+		drawDetail(&m_dd,m_tileCache,tx,ty,type, m_isReverseShow);
 }
 
 void Sample_TempObstacles::renderCachedTileOverlay(const int tx, const int ty, double* proj, double* model, int* view)
