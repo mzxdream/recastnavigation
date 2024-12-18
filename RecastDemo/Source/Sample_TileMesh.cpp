@@ -447,9 +447,18 @@ void Sample_TileMesh::handleRender()
 	if (m_drawMode != DRAWMODE_NAVMESH_TRANS)
 	{
 		// Draw mesh
-		duDebugDrawTriMeshSlope(&m_dd, m_geom->getMesh()->getVerts(), m_geom->getMesh()->getVertCount(),
-								m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(),
-								m_agentMaxSlope, texScale);
+		if (!m_isReverseShow)
+		{
+			duDebugDrawTriMeshSlope(&m_dd, m_geom->getMesh()->getVerts(), m_geom->getMesh()->getVertCount(),
+				m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(),
+				m_agentMaxSlope, texScale);
+		}
+		else
+		{
+			duDebugDrawTriMeshSlope(&m_dd, m_geom->getMesh()->getReverseVerts(), m_geom->getMesh()->getVertCount(),
+				m_geom->getMesh()->getReverseTris(), m_geom->getMesh()->getReverseNormals(), m_geom->getMesh()->getTriCount(),
+				m_agentMaxSlope, texScale);
+		}
 		m_geom->drawOffMeshConnections(&m_dd);
 	}
 		
