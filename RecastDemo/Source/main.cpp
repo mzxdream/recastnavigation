@@ -170,7 +170,7 @@ int main(int /*argc*/, char** /*argv*/)
 	vector<string> files;
 
 	vector<string> meshesFiles;
-	const vector<string> meshesFolders = { "Meshes", };
+	vector<string> meshesFolders = { "Meshes", };
 	string meshName = "Choose Mesh...";
 	
 	float markerPosition[3] = {0, 0, 0};
