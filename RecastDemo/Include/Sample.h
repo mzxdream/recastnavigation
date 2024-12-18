@@ -131,15 +131,17 @@ protected:
 	BuildContext* m_ctx;
 
 	SampleDebugDraw m_dd;
-	
+
+	bool m_isReverseShow;
+
 	dtNavMesh* loadAll(const char* path);
 	void saveAll(const char* path, const dtNavMesh* mesh);
 
 public:
 	Sample();
 	virtual ~Sample();
-	bool isReverse() const { return true; }
 	void setContext(BuildContext* ctx) { m_ctx = ctx; }
+	void setReverseShow(bool isReverseShow) { m_isReverseShow = isReverseShow; }
 	
 	void setTool(SampleTool* tool);
 	SampleToolState* getToolState(int type) { return m_toolStates[type]; }
