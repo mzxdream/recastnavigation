@@ -39,7 +39,7 @@ static float distancePtLine2d(const float* pt, const float* p, const float* q)
 
 static void drawPolyBoundaries(duDebugDraw* dd, const dtMeshTile* tile,
 							   const unsigned int col, const float linew,
-							   bool inner, bool isReverseShow = false)
+							   bool inner, bool isReverseShow)
 {
 	static const float thr = 0.01f*0.01f;
 
@@ -118,7 +118,7 @@ static void drawPolyBoundaries(duDebugDraw* dd, const dtMeshTile* tile,
 }
 
 static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
-						 const dtMeshTile* tile, unsigned char flags, bool isReverseShow = false)
+						 const dtMeshTile* tile, unsigned char flags, bool isReverseShow)
 {
 	dtPolyRef base = mesh.getPolyRefBase(tile);
 
@@ -162,10 +162,10 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	dd->end();
 	
 	// Draw inter poly boundaries
-	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true, isReverseShow);
 	
 	// Draw outer poly boundaries
-	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,220), 2.5f, false);
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,220), 2.5f, false, isReverseShow);
 
 	if (flags & DU_DRAWNAVMESH_OFFMESHCONS)
 	{
@@ -242,7 +242,7 @@ void duDebugDrawNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, unsigned char fl
 	{
 		const dtMeshTile* tile = mesh.getTile(i);
 		if (!tile->header) continue;
-		drawMeshTile(dd, mesh, 0, tile, flags);
+		drawMeshTile(dd, mesh, 0, tile, flags, isReverseShow);
 	}
 }
 
@@ -256,7 +256,7 @@ void duDebugDrawNavMeshWithClosedList(struct duDebugDraw* dd, const dtNavMesh& m
 	{
 		const dtMeshTile* tile = mesh.getTile(i);
 		if (!tile->header) continue;
-		drawMeshTile(dd, mesh, q, tile, flags);
+		drawMeshTile(dd, mesh, q, tile, flags, isReverseShow);
 	}
 }
 
@@ -299,7 +299,7 @@ void duDebugDrawNavMeshNodes(struct duDebugDraw* dd, const dtNavMeshQuery& query
 }
 
 
-static void drawMeshTileBVTree(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow = false)
+static void drawMeshTileBVTree(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow)
 {
 	// Draw BV nodes.
 	const float cs = 1.0f / tile->header->bvQuantFactor;
@@ -328,11 +328,11 @@ void duDebugDrawNavMeshBVTree(duDebugDraw* dd, const dtNavMesh& mesh, bool isRev
 	{
 		const dtMeshTile* tile = mesh.getTile(i);
 		if (!tile->header) continue;
-		drawMeshTileBVTree(dd, tile);
+		drawMeshTileBVTree(dd, tile, isReverseShow);
 	}
 }
 
-static void drawMeshTilePortal(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow = false)
+static void drawMeshTilePortal(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow)
 {
 	// Draw portals
 	const float padx = 0.04f;
@@ -412,7 +412,7 @@ void duDebugDrawNavMeshPortals(duDebugDraw* dd, const dtNavMesh& mesh, bool isRe
 	{
 		const dtMeshTile* tile = mesh.getTile(i);
 		if (!tile->header) continue;
-		drawMeshTilePortal(dd, tile);
+		drawMeshTilePortal(dd, tile, isReverseShow);
 	}
 }
 
@@ -485,7 +485,7 @@ void duDebugDrawNavMeshPoly(duDebugDraw* dd, const dtNavMesh& mesh, dtPolyRef re
 
 }
 
-static void debugDrawTileCachePortals(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow = false)
+static void debugDrawTileCachePortals(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow)
 {
 	const int w = (int)layer.header->width;
 	const int h = (int)layer.header->height;
@@ -577,7 +577,7 @@ void duDebugDrawTileCacheLayerAreas(struct duDebugDraw* dd, const dtTileCacheLay
 	}
 	dd->end();
 	
-	debugDrawTileCachePortals(dd, layer, cs, ch);
+	debugDrawTileCachePortals(dd, layer, cs, ch, isReverseShow);
 }
 
 void duDebugDrawTileCacheLayerRegions(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow)
@@ -625,7 +625,7 @@ void duDebugDrawTileCacheLayerRegions(struct duDebugDraw* dd, const dtTileCacheL
 	}
 	dd->end();
 	
-	debugDrawTileCachePortals(dd, layer, cs, ch);
+	debugDrawTileCachePortals(dd, layer, cs, ch, isReverseShow);
 }
 
 
