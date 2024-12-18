@@ -184,6 +184,17 @@ int main(int /*argc*/, char** /*argv*/)
 
 	BuildContext ctx;
 	
+	FILE* fpMeshesFolderPath = fopen("./MeshPath.txt", "r");
+	if (fpMeshesFolderPath != nullptr)
+	{
+		char tempBuffer[260];
+		while (fgets(tempBuffer, 260, fpMeshesFolderPath) != nullptr)
+		{
+			meshesFolders.emplace_back(tempBuffer);
+		}
+		fclose(fpMeshesFolderPath);
+	}
+
 	// Fog.
 	float fogColor[4] = { 0.32f, 0.31f, 0.30f, 1.0f };
 	glEnable(GL_FOG);
