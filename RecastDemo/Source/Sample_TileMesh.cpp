@@ -197,7 +197,7 @@ Sample_TileMesh::Sample_TileMesh() :
 	memset(m_lastBuiltTileBmin, 0, sizeof(m_lastBuiltTileBmin));
 	memset(m_lastBuiltTileBmax, 0, sizeof(m_lastBuiltTileBmax));
 	
-	setTool(new NavMeshTileTool);
+	setTool(new NavMeshTesterTool);
 }
 
 Sample_TileMesh::~Sample_TileMesh()
@@ -298,6 +298,13 @@ void Sample_TileMesh::handleSettings()
 				filePath = filePath.substr(0, extensionPos) + ".xhnavmesh";
 				m_navMesh = Sample::loadAll(filePath.c_str());
 				m_navQuery->init(m_navMesh, 2048);
+				if (m_tool)
+				{
+					m_tool->reset();
+					m_tool->init(this);
+				}
+				resetToolStates();
+				initToolStates(this);
 			}
 		}
 	}
