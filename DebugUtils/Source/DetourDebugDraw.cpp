@@ -325,7 +325,14 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	for (int i = 0; i < tile->header->vertCount; ++i)
 	{
 		const float* v = &tile->verts[i*3];
-		dd->vertex(v[0], v[1], v[2], vcol);
+		if (!isReverseShow)
+		{
+			dd->vertex(v[0], v[1], v[2], vcol);
+		}
+		else
+		{
+			dd->vertex(-v[0], v[1], v[2], vcol);
+		}
 	}
 	dd->end();
 
