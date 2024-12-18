@@ -154,7 +154,7 @@ int main(int /*argc*/, char** /*argv*/)
 	bool mouseOverMenu = false;
 	
 	bool showMenu = !presentationMode;
-	bool showReverse = false;
+	bool showReverse = true;
 	bool showLog = false;
 	bool showTools = true;
 	bool showLevels = false;
