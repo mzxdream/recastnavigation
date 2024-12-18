@@ -39,7 +39,7 @@ static float distancePtLine2d(const float* pt, const float* p, const float* q)
 
 static void drawPolyBoundaries(duDebugDraw* dd, const dtMeshTile* tile,
 							   const unsigned int col, const float linew,
-							   bool inner)
+							   bool inner, bool isReverseShow = false)
 {
 	static const float thr = 0.01f*0.01f;
 
@@ -118,7 +118,7 @@ static void drawPolyBoundaries(duDebugDraw* dd, const dtMeshTile* tile,
 }
 
 static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
-						 const dtMeshTile* tile, unsigned char flags)
+						 const dtMeshTile* tile, unsigned char flags, bool isReverseShow = false)
 {
 	dtPolyRef base = mesh.getPolyRefBase(tile);
 
@@ -234,7 +234,7 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	dd->depthMask(true);
 }
 
-void duDebugDrawNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags)
+void duDebugDrawNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -246,7 +246,7 @@ void duDebugDrawNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, unsigned char fl
 	}
 }
 
-void duDebugDrawNavMeshWithClosedList(struct duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags)
+void duDebugDrawNavMeshWithClosedList(struct duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags, bool isReverseShow)
 {
 	if (!dd) return;
 
@@ -260,7 +260,7 @@ void duDebugDrawNavMeshWithClosedList(struct duDebugDraw* dd, const dtNavMesh& m
 	}
 }
 
-void duDebugDrawNavMeshNodes(struct duDebugDraw* dd, const dtNavMeshQuery& query)
+void duDebugDrawNavMeshNodes(struct duDebugDraw* dd, const dtNavMeshQuery& query, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -299,7 +299,7 @@ void duDebugDrawNavMeshNodes(struct duDebugDraw* dd, const dtNavMeshQuery& query
 }
 
 
-static void drawMeshTileBVTree(duDebugDraw* dd, const dtMeshTile* tile)
+static void drawMeshTileBVTree(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow = false)
 {
 	// Draw BV nodes.
 	const float cs = 1.0f / tile->header->bvQuantFactor;
@@ -320,7 +320,7 @@ static void drawMeshTileBVTree(duDebugDraw* dd, const dtMeshTile* tile)
 	dd->end();
 }
 
-void duDebugDrawNavMeshBVTree(duDebugDraw* dd, const dtNavMesh& mesh)
+void duDebugDrawNavMeshBVTree(duDebugDraw* dd, const dtNavMesh& mesh, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -332,7 +332,7 @@ void duDebugDrawNavMeshBVTree(duDebugDraw* dd, const dtNavMesh& mesh)
 	}
 }
 
-static void drawMeshTilePortal(duDebugDraw* dd, const dtMeshTile* tile)
+static void drawMeshTilePortal(duDebugDraw* dd, const dtMeshTile* tile, bool isReverseShow = false)
 {
 	// Draw portals
 	const float padx = 0.04f;
@@ -404,7 +404,7 @@ static void drawMeshTilePortal(duDebugDraw* dd, const dtMeshTile* tile)
 	dd->end();
 }
 
-void duDebugDrawNavMeshPortals(duDebugDraw* dd, const dtNavMesh& mesh)
+void duDebugDrawNavMeshPortals(duDebugDraw* dd, const dtNavMesh& mesh, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -417,7 +417,7 @@ void duDebugDrawNavMeshPortals(duDebugDraw* dd, const dtNavMesh& mesh)
 }
 
 void duDebugDrawNavMeshPolysWithFlags(struct duDebugDraw* dd, const dtNavMesh& mesh,
-									  const unsigned short polyFlags, const unsigned int col)
+									  const unsigned short polyFlags, const unsigned int col, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -431,12 +431,12 @@ void duDebugDrawNavMeshPolysWithFlags(struct duDebugDraw* dd, const dtNavMesh& m
 		{
 			const dtPoly* p = &tile->polys[j];
 			if ((p->flags & polyFlags) == 0) continue;
-			duDebugDrawNavMeshPoly(dd, mesh, base|(dtPolyRef)j, col);
+			duDebugDrawNavMeshPoly(dd, mesh, base|(dtPolyRef)j, col, isReverseShow);
 		}
 	}
 }
 
-void duDebugDrawNavMeshPoly(duDebugDraw* dd, const dtNavMesh& mesh, dtPolyRef ref, const unsigned int col)
+void duDebugDrawNavMeshPoly(duDebugDraw* dd, const dtNavMesh& mesh, dtPolyRef ref, const unsigned int col, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -485,7 +485,7 @@ void duDebugDrawNavMeshPoly(duDebugDraw* dd, const dtNavMesh& mesh, dtPolyRef re
 
 }
 
-static void debugDrawTileCachePortals(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch)
+static void debugDrawTileCachePortals(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow = false)
 {
 	const int w = (int)layer.header->width;
 	const int h = (int)layer.header->height;
@@ -526,7 +526,7 @@ static void debugDrawTileCachePortals(struct duDebugDraw* dd, const dtTileCacheL
 	dd->end();
 }
 
-void duDebugDrawTileCacheLayerAreas(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch)
+void duDebugDrawTileCacheLayerAreas(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow)
 {
 	const int w = (int)layer.header->width;
 	const int h = (int)layer.header->height;
@@ -580,7 +580,7 @@ void duDebugDrawTileCacheLayerAreas(struct duDebugDraw* dd, const dtTileCacheLay
 	debugDrawTileCachePortals(dd, layer, cs, ch);
 }
 
-void duDebugDrawTileCacheLayerRegions(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch)
+void duDebugDrawTileCacheLayerRegions(struct duDebugDraw* dd, const dtTileCacheLayer& layer, const float cs, const float ch, bool isReverseShow)
 {
 	const int w = (int)layer.header->width;
 	const int h = (int)layer.header->height;
@@ -646,7 +646,7 @@ struct dtTileCacheContourSet
 };*/
 
 void duDebugDrawTileCacheContours(duDebugDraw* dd, const struct dtTileCacheContourSet& lcset,
-								  const float* orig, const float cs, const float ch)
+								  const float* orig, const float cs, const float ch, bool isReverseShow)
 {
 	if (!dd) return;
 	
@@ -726,7 +726,7 @@ void duDebugDrawTileCacheContours(duDebugDraw* dd, const struct dtTileCacheConto
 }
 
 void duDebugDrawTileCachePolyMesh(duDebugDraw* dd, const struct dtTileCachePolyMesh& lmesh,
-								  const float* orig, const float cs, const float ch)
+								  const float* orig, const float cs, const float ch, bool isReverseShow)
 {
 	if (!dd) return;
 	
