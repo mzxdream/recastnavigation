@@ -120,13 +120,22 @@ void Sample::handleRender()
 {
 	if (!m_geom)
 		return;
-	
+
 	// Draw mesh
-	duDebugDrawTriMesh(&m_dd, m_geom->getMesh()->getVerts(), m_geom->getMesh()->getVertCount(),
-					   m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(), 0, 1.0f);
+	if (!m_isReverseShow)
+	{
+		duDebugDrawTriMesh(&m_dd, m_geom->getMesh()->getVerts(), m_geom->getMesh()->getVertCount(),
+			m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(), 0, 1.0f);
+	}
+	else
+	{
+		duDebugDrawTriMesh(&m_dd, m_geom->getMesh()->getReverseVerts(), m_geom->getMesh()->getVertCount(),
+			m_geom->getMesh()->getReverseTris(), m_geom->getMesh()->getReverseNormals(), m_geom->getMesh()->getTriCount(), 0, 1.0f);
+	}
+
 	// Draw bounds
-	const float* bmin = m_geom->getMeshBoundsMin();
-	const float* bmax = m_geom->getMeshBoundsMax();
+	const float* bmin = !m_isReverseShow ? m_geom->getMeshBoundsMin() : m_geom->getMeshReverseBoundsMin();
+	const float* bmax = !m_isReverseShow ? m_geom->getMeshBoundsMax() : m_geom->getMeshReverseBoundsMax();
 	duDebugDrawBoxWire(&m_dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duRGBA(255,255,255,128), 1.0f);
 }
 

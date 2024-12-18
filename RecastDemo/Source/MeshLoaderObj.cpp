@@ -27,6 +27,9 @@ rcMeshLoaderObj::rcMeshLoaderObj() :
 	m_verts(0),
 	m_tris(0),
 	m_normals(0),
+	m_reverseVerts(0),
+	m_reverseTris(0),
+	m_reverseNormals(0),
 	m_vertCount(0),
 	m_triCount(0)
 {
@@ -37,6 +40,9 @@ rcMeshLoaderObj::~rcMeshLoaderObj()
 	delete [] m_verts;
 	delete [] m_normals;
 	delete [] m_tris;
+	delete [] m_reverseVerts;
+	delete [] m_reverseNormals;
+	delete [] m_reverseTris;
 }
 		
 void rcMeshLoaderObj::addVertex(float x, float y, float z, int& cap)
@@ -238,7 +244,26 @@ bool rcMeshLoaderObj::load(const std::string& filename)
 			n[2] *= d;
 		}
 	}
-	
+
+	m_reverseVerts = new float[m_vertCount * 3];
+	m_reverseTris = new int[m_triCount * 3];
+	m_reverseNormals = new float[m_triCount * 3];
+	for (int i = 0; i < m_vertCount; i++)
+	{
+		m_reverseVerts[i * 3 + 0] = -m_verts[i * 3 + 0];
+		m_reverseVerts[i * 3 + 1] = m_verts[i * 3 + 1];
+		m_reverseVerts[i * 3 + 2] = m_verts[i * 3 + 2];
+	}
+	for (int i = 0; i < m_triCount; i++)
+	{
+		m_reverseTris[i * 3 + 0] = m_tris[i * 3 + 0];
+		m_reverseTris[i * 3 + 1] = m_tris[i * 3 + 2];
+		m_reverseTris[i * 3 + 2] = m_tris[i * 3 + 1];
+	}
+	for (int i = 0; i < m_triCount * 3; i++)
+	{
+		m_reverseNormals[i] = m_normals[i];
+	}
 	m_filename = filename;
 	return true;
 }

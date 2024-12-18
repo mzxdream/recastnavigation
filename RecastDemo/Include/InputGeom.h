@@ -65,6 +65,8 @@ struct BuildSettings
 	// Bounds of the area to mesh
 	float navMeshBMin[3];
 	float navMeshBMax[3];
+	float navMeshReverseBMin[3];
+	float navMeshReverseBMax[3];
 	// Size of the tiles in voxels
 	float tileSize;
 };
@@ -72,8 +74,10 @@ struct BuildSettings
 class InputGeom
 {
 	rcChunkyTriMesh* m_chunkyMesh;
+	rcChunkyTriMesh* m_reverseChunkyMesh;
 	rcMeshLoaderObj* m_mesh;
 	float m_meshBMin[3], m_meshBMax[3];
+	float m_meshReverseBMin[3], m_meshReverseBMax[3];
 	BuildSettings m_buildSettings;
 	bool m_hasBuildSettings;
 	
@@ -112,7 +116,12 @@ public:
 	const float* getMeshBoundsMax() const { return m_meshBMax; }
 	const float* getNavMeshBoundsMin() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMin : m_meshBMin; }
 	const float* getNavMeshBoundsMax() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMax : m_meshBMax; }
+	const float* getMeshReverseBoundsMin() const { return m_meshReverseBMin; }
+	const float* getMeshReverseBoundsMax() const { return m_meshReverseBMax; }
+	const float* getNavMeshReverseBoundsMin() const { return m_hasBuildSettings ? m_buildSettings.navMeshReverseBMin : m_meshReverseBMin; }
+	const float* getNavMeshReverseBoundsMax() const { return m_hasBuildSettings ? m_buildSettings.navMeshReverseBMax : m_meshReverseBMax; }
 	const rcChunkyTriMesh* getChunkyMesh() const { return m_chunkyMesh; }
+	const rcChunkyTriMesh* getReverseChunkyMesh() const { return m_reverseChunkyMesh; }
 	const BuildSettings* getBuildSettings() const { return m_hasBuildSettings ? &m_buildSettings : 0; }
 	bool raycastMesh(float* src, float* dst, float& tmin);
 

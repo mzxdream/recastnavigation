@@ -108,6 +108,7 @@ static char* parseRow(char* buf, char* bufEnd, char* row, int len)
 
 InputGeom::InputGeom() :
 	m_chunkyMesh(0),
+	m_reverseChunkyMesh(0),
 	m_mesh(0),
 	m_hasBuildSettings(false),
 	m_offMeshConCount(0),
@@ -118,6 +119,7 @@ InputGeom::InputGeom() :
 InputGeom::~InputGeom()
 {
 	delete m_chunkyMesh;
+	delete m_reverseChunkyMesh;
 	delete m_mesh;
 }
 		
@@ -127,6 +129,8 @@ bool InputGeom::loadMesh(rcContext* ctx, const std::string& filepath)
 	{
 		delete m_chunkyMesh;
 		m_chunkyMesh = 0;
+		delete m_reverseChunkyMesh;
+		m_reverseChunkyMesh = 0;
 		delete m_mesh;
 		m_mesh = 0;
 	}
@@ -146,6 +150,7 @@ bool InputGeom::loadMesh(rcContext* ctx, const std::string& filepath)
 	}
 
 	rcCalcBounds(m_mesh->getVerts(), m_mesh->getVertCount(), m_meshBMin, m_meshBMax);
+	rcCalcBounds(m_mesh->getReverseVerts(), m_mesh->getVertCount(), m_meshReverseBMin, m_meshReverseBMax);
 
 	m_chunkyMesh = new rcChunkyTriMesh;
 	if (!m_chunkyMesh)
@@ -157,8 +162,18 @@ bool InputGeom::loadMesh(rcContext* ctx, const std::string& filepath)
 	{
 		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Failed to build chunky mesh.");
 		return false;
-	}		
-
+	}
+	m_reverseChunkyMesh = new rcChunkyTriMesh;
+	if (!m_reverseChunkyMesh)
+	{
+		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'm_chunkyMesh'.");
+		return false;
+	}
+	if (!rcCreateChunkyTriMesh(m_mesh->getReverseVerts(), m_mesh->getReverseTris(), m_mesh->getTriCount(), 256, m_reverseChunkyMesh))
+	{
+		ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Failed to build chunky mesh.");
+		return false;
+	}
 	return true;
 }
 

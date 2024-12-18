@@ -32,6 +32,9 @@ public:
 	const float* getVerts() const { return m_verts; }
 	const float* getNormals() const { return m_normals; }
 	const int* getTris() const { return m_tris; }
+	const float* getReverseVerts() const { return m_reverseVerts; }
+	const float* getReverseNormals() const { return m_reverseNormals; }
+	const int* getReverseTris() const { return m_reverseTris; }
 	int getVertCount() const { return m_vertCount; }
 	int getTriCount() const { return m_triCount; }
 	const std::string& getFileName() const { return m_filename; }
@@ -51,6 +54,9 @@ private:
 	float* m_normals;
 	int m_vertCount;
 	int m_triCount;
+	float* m_reverseVerts;
+	int* m_reverseTris;
+	float* m_reverseNormals;
 };
 
 #endif // MESHLOADER_OBJ
