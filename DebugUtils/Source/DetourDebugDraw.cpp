@@ -244,9 +244,10 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 			for (int j = 0; j < pd->triCount; ++j)
 			{
 				const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
-				for (int k = 0; k < 3; ++k)
+				for (int n = 0; n < 3; ++n)
 				{
 					static int temp[3] = { 0, 2, 1 };
+					int k = temp[n];
 					float* pvert = nullptr;
 					if (t[k] < p->vertCount)
 						pvert = &tile->verts[p->verts[t[k]] * 3];
