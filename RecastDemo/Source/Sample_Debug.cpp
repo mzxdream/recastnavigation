@@ -197,7 +197,7 @@ void Sample_Debug::handleRender()
 	}
 		
 	if (m_navMesh)
-		duDebugDrawNavMesh(&m_dd, *m_navMesh, DU_DRAWNAVMESH_OFFMESHCONS);
+		duDebugDrawNavMesh(&m_dd, *m_navMesh, DU_DRAWNAVMESH_OFFMESHCONS, m_isReverseShow);
 
 	if (m_ref && m_navMesh)
 		duDebugDrawNavMeshPoly(&m_dd, *m_navMesh, m_ref, duRGBA(255,0,0,128));

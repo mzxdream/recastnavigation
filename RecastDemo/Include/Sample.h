@@ -142,6 +142,7 @@ public:
 	virtual ~Sample();
 	void setContext(BuildContext* ctx) { m_ctx = ctx; }
 	void setReverseShow(bool isReverseShow) { m_isReverseShow = isReverseShow; }
+	bool IsReverseShow() const { return m_isReverseShow; }
 	
 	void setTool(SampleTool* tool);
 	SampleToolState* getToolState(int type) { return m_toolStates[type]; }
