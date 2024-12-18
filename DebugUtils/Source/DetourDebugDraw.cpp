@@ -148,21 +148,33 @@ static void drawPolyBoundaries(duDebugDraw* dd, const dtMeshTile* tile,
 					if (p->neis[j] != 0) continue;
 				}
 
-				const float* v0 = &tile->verts[p->verts[j] * 3];
-				const float* v1 = &tile->verts[p->verts[(j + 1) % nj] * 3];
+				const float* _v0 = &tile->verts[p->verts[j] * 3];
+				const float* _v1 = &tile->verts[p->verts[(j + 1) % nj] * 3];
+				float v0[] = { -_v1[0], _v1[1], _v1[2] };
+				float v1[] = { -_v0[0], _v0[1], _v0[2] };
 
 				// Draw detail mesh edges which align with the actual poly edge.
 				// This is really slow.
 				for (int k = 0; k < pd->triCount; ++k)
 				{
 					const unsigned char* t = &tile->detailTris[(pd->triBase + k) * 4];
-					const float* tv[3];
-					for (int m = 0; m < 3; ++m)
+					float tv[3][3] = {};
+					for (int n = 0; n < 3; ++n)
 					{
+						static int temp[3] = { 0, 2, 1 };
+						int m = temp[n];
 						if (t[m] < p->vertCount)
-							tv[m] = &tile->verts[p->verts[t[m]] * 3];
+						{
+							tv[m][0] = -tile->verts[p->verts[t[m]] * 3 + 0];
+							tv[m][1] = tile->verts[p->verts[t[m]] * 3 + 1];
+							tv[m][2] = tile->verts[p->verts[t[m]] * 3 + 2];
+						}
 						else
-							tv[m] = &tile->detailVerts[(pd->vertBase + (t[m] - p->vertCount)) * 3];
+						{
+							tv[m][0] = -tile->detailVerts[(pd->vertBase + (t[m] - p->vertCount)) * 3 + 0];
+							tv[m][1] = tile->detailVerts[(pd->vertBase + (t[m] - p->vertCount)) * 3 + 0];
+							tv[m][2] = tile->detailVerts[(pd->vertBase + (t[m] - p->vertCount)) * 3 + 0];
+						}
 					}
 					for (int m = 0, n = 2; m < 3; n = m++)
 					{
@@ -212,16 +224,36 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 			else
 				col = duTransCol(dd->areaToCol(p->getArea()), 64);
 		}
-		
-		for (int j = 0; j < pd->triCount; ++j)
+
+		if (!isReverseShow)
 		{
-			const unsigned char* t = &tile->detailTris[(pd->triBase+j)*4];
-			for (int k = 0; k < 3; ++k)
+			for (int j = 0; j < pd->triCount; ++j)
 			{
-				if (t[k] < p->vertCount)
-					dd->vertex(&tile->verts[p->verts[t[k]]*3], col);
-				else
-					dd->vertex(&tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3], col);
+				const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
+				for (int k = 0; k < 3; ++k)
+				{
+					if (t[k] < p->vertCount)
+						dd->vertex(&tile->verts[p->verts[t[k]] * 3], col);
+					else
+						dd->vertex(&tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3], col);
+				}
+			}
+		}
+		else
+		{
+			for (int j = 0; j < pd->triCount; ++j)
+			{
+				const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
+				for (int k = 0; k < 3; ++k)
+				{
+					static int temp[3] = { 0, 2, 1 };
+					float* pvert = nullptr;
+					if (t[k] < p->vertCount)
+						pvert = &tile->verts[p->verts[t[k]] * 3];
+					else
+						pvert = &tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3];
+					dd->vertex(-pvert[0], pvert[1], pvert[2], col);
+				}
 			}
 		}
 	}
