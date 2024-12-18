@@ -272,16 +272,34 @@ void Sample_TileMesh::handleSettings()
 	imguiIndent();
 	imguiIndent();
 	
-	if (imguiButton("Save"))
+	if (imguiButton("SaveXH"))
 	{
-		Sample::saveAll("all_tiles_navmesh.bin", m_navMesh);
+		if (const auto* mesh = m_geom ? m_geom->getMesh() : nullptr)
+		{
+			std::string filePath = mesh->getFileName();
+			auto extensionPos = filePath.find_last_of('.');
+			if (extensionPos != std::string::npos)
+			{
+				filePath = filePath.substr(0, extensionPos) + ".xhnavmesh";
+				Sample::saveAll(filePath.c_str(), m_navMesh);
+			}
+		}
 	}
 
-	if (imguiButton("Load"))
+	if (imguiButton("LoadXH"))
 	{
 		dtFreeNavMesh(m_navMesh);
-		m_navMesh = Sample::loadAll("all_tiles_navmesh.bin");
-		m_navQuery->init(m_navMesh, 2048);
+		if (const auto* mesh = m_geom ? m_geom->getMesh() : nullptr)
+		{
+			std::string filePath = mesh->getFileName();
+			auto extensionPos = filePath.find_last_of('.');
+			if (extensionPos != std::string::npos)
+			{
+				filePath = filePath.substr(0, extensionPos) + ".xhnavmesh";
+				m_navMesh = Sample::loadAll(filePath.c_str());
+				m_navQuery->init(m_navMesh, 2048);
+			}
+		}
 	}
 
 	imguiUnindent();

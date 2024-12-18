@@ -184,15 +184,20 @@ int main(int /*argc*/, char** /*argv*/)
 
 	BuildContext ctx;
 	
-	FILE* fpMeshesFolderPath = fopen("./MeshPath.txt", "r");
-	if (fpMeshesFolderPath != nullptr)
 	{
-		char tempBuffer[260];
-		while (fgets(tempBuffer, 260, fpMeshesFolderPath) != nullptr)
+		FILE* fpMeshesFolderPath = fopen("./MeshPath.txt", "r");
+		if (fpMeshesFolderPath != nullptr)
 		{
-			meshesFolders.emplace_back(tempBuffer);
+			char tempBuffer[260];
+			while (fgets(tempBuffer, 260, fpMeshesFolderPath) != nullptr)
+			{
+				meshesFolders.emplace_back(tempBuffer);
+			}
+			fclose(fpMeshesFolderPath);
 		}
-		fclose(fpMeshesFolderPath);
+		sampleName = g_samples[1].name;
+		sample = g_samples[1].create();
+		sample->setContext(&ctx);
 	}
 
 	// Fog.
