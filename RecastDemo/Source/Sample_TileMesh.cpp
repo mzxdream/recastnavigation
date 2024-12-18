@@ -465,9 +465,9 @@ void Sample_TileMesh::handleRender()
 	glDepthMask(GL_FALSE);
 	
 	// Draw bounds
-	const float* bmin = m_geom->getNavMeshBoundsMin();
-	const float* bmax = m_geom->getNavMeshBoundsMax();
-	duDebugDrawBoxWire(&m_dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duRGBA(255,255,255,128), 1.0f);
+	const float* bmin = !m_isReverseShow ? m_geom->getNavMeshBoundsMin() : m_geom->getNavMeshReverseBoundsMin();
+	const float* bmax = !m_isReverseShow ? m_geom->getNavMeshBoundsMax() : m_geom->getNavMeshReverseBoundsMax();
+	duDebugDrawBoxWire(&m_dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], duRGBA(255, 255, 255, 128), 1.0f);
 	
 	// Tiling grid.
 	int gw = 0, gh = 0;
